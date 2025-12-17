@@ -4,10 +4,12 @@ import Sidebar from './components/layout/Sidebar'
 import Header from './components/layout/Header'
 import Dashboard from './pages/Dashboard'
 import Appointments from './pages/Appointments'
+import FollowUps from './pages/FollowUps'
 import Patients from './pages/Patients'
 import Leads from './pages/Leads'
 import Calls from './pages/Calls'
 import AdAnalytics from './pages/AdAnalytics'
+import UniversalInbox from './pages/UniversalInbox'
 import Login from './pages/Login'
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
         return <Dashboard onNavigate={setCurrentPage} />
       case 'appointments':
         return <Appointments />
+      case 'followups':
+        return <FollowUps />
       case 'patients':
         return <Patients />
       case 'leads':
@@ -32,6 +36,8 @@ function App() {
         return <Calls />
       case 'analytics':
         return <AdAnalytics />
+      case 'inbox':
+        return <UniversalInbox />
       default:
         return <Dashboard onNavigate={setCurrentPage} />
     }

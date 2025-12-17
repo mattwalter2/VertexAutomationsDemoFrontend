@@ -1,12 +1,14 @@
-import { Home, Calendar, Users, Phone, BarChart3, Settings } from 'lucide-react'
+import { Home, Calendar, Users, Phone, BarChart3, Settings, MessageSquare, CalendarClock } from 'lucide-react'
 
 export default function Sidebar({ currentPage, setCurrentPage }) {
     const menuItems = [
         { id: 'dashboard', label: 'Dashboard', icon: Home },
         { id: 'appointments', label: 'Appointments', icon: Calendar },
+        { id: 'followups', label: 'Follow Ups', icon: CalendarClock },
         { id: 'patients', label: 'Patients', icon: Users },
         { id: 'leads', label: 'Leads', icon: Users },
         { id: 'calls', label: 'Call Logs', icon: Phone },
+        { id: 'inbox', label: 'Universal Inbox', icon: MessageSquare },
         { id: 'analytics', label: 'Ad Analytics', icon: BarChart3 },
     ]
 
