@@ -89,6 +89,47 @@ export default function Leads() {
         })
     }
 
+    const handleCall = async (lead) => {
+        if (!lead.phone) {
+            alert("No phone number for this lead.")
+            return
+        }
+
+        const confirmCall = window.confirm(`Call ${lead.name} at ${lead.phone}?`)
+        if (!confirmCall) return
+
+        try {
+            // alert(`Calling ${lead.name}...`) // Optional feedback
+            const response = await fetch('https://dentalclinic-backend-usfp.onrender.com/api/vapi/initiate-call', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    phoneNumber: lead.phone,
+                    name: lead.name,
+                    variables: {
+                        patient_name: lead.name,
+                        projected_treatment: lead.treatment,
+                        budget: lead.budget,
+                        lead_source: lead.source,
+                        notes: lead.notes || "None"
+                    }
+                }),
+            })
+
+            const data = await response.json()
+            if (response.ok) {
+                alert(`Call initiated! Vapi ID: ${data.id}`)
+            } else {
+                alert(`Failed: ${data.error}`)
+            }
+        } catch (error) {
+            console.error("Call failed", error)
+            alert("Failed to connect to backend.")
+        }
+    }
+
     const statusConfig = {
         new: { label: 'New', color: 'blue' },
         contacted: { label: 'Contacted', color: 'purple' },
@@ -224,7 +265,9 @@ export default function Leads() {
 
                             {/* Actions */}
                             <div className="flex gap-2 mt-4">
-                                <button className="flex-1 bg-sky-50 hover:bg-sky-100 text-sky-600 px-3 py-2 rounded text-sm font-medium transition-colors">
+                                <button
+                                    onClick={() => handleCall(lead)}
+                                    className="flex-1 bg-sky-50 hover:bg-sky-100 text-sky-600 px-3 py-2 rounded text-sm font-medium transition-colors">
                                     Call
                                 </button>
                                 <button className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-600 px-3 py-2 rounded text-sm font-medium transition-colors">

@@ -1,101 +1,46 @@
-const META_ACCESS_TOKEN = import.meta.env.VITE_META_ACCESS_TOKEN;
-const META_AD_ACCOUNT_ID = import.meta.env.VITE_META_AD_ACCOUNT_ID;
-const GRAPH_API_BASE = 'https://graph.facebook.com/v18.0';
+
+// Removed frontend env vars - data now comes from backend
+const BACKEND_API_URL = 'https://dentalclinic-backend-usfp.onrender.com'; // Production URL
 
 /**
- * Fetch campaigns from Meta Ads
+ * Fetch campaigns from Backend Proxy (which fetches from Meta)
  */
 export async function fetchMetaCampaigns() {
     try {
-        const accountId = META_AD_ACCOUNT_ID.startsWith('act_')
-            ? META_AD_ACCOUNT_ID
-            : `act_${META_AD_ACCOUNT_ID}`;
-
-        const fields = [
-            'id',
-            'name',
-            'status',
-            'effective_status',
-            'objective',
-            'spend_cap',
-            'daily_budget',
-            'lifetime_budget'
-        ].join(',');
-
-        const url = `${GRAPH_API_BASE}/${accountId}/campaigns?fields=${fields}&access_token=${META_ACCESS_TOKEN}`;
+        // Updated to use the backend proxy endpoint
+        // Switch to localhost for local testing if needed, or keep production URL
+        // ideally this base URL should be configurable via a single var if you switch envs often
+        const url = `${BACKEND_API_URL}/api/meta/campaigns`;
 
         const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error(`Failed to fetch campaigns: ${response.statusText}`);
+            throw new Error(`Failed to fetch campaigns from backend: ${response.statusText}`);
         }
 
         const data = await response.json();
         return data.data || [];
     } catch (error) {
-        console.error('Error fetching Meta campaigns:', error);
+        console.error('Error fetching Meta campaigns from backend:', error);
         throw error;
     }
 }
 
 /**
  * Fetch campaign insights/analytics
+ * Deprecated: Backend now returns insights attached to campaigns
  */
-export async function fetchCampaignInsights(campaignId, datePreset = 'last_30d') {
-    try {
-        const fields = [
-            'impressions',
-            'clicks',
-            'spend',
-            'ctr',
-            'cpc',
-            'cpp',
-            'cpm',
-            'reach',
-            'frequency',
-            'actions',
-            'cost_per_action_type'
-        ].join(',');
-
-        const url = `${GRAPH_API_BASE}/${campaignId}/insights?fields=${fields}&date_preset=${datePreset}&access_token=${META_ACCESS_TOKEN}`;
-
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch insights: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        return data.data && data.data.length > 0 ? data.data[0] : null;
-    } catch (error) {
-        console.error('Error fetching campaign insights:', error);
-        return null;
-    }
+export async function fetchCampaignInsights(campaignId) {
+    console.warn("fetchCampaignInsights is deprecated. Insights are now returned by fetchMetaCampaigns.");
+    return null;
 }
 
 /**
  * Fetch all campaigns with their insights
+ * Now just a wrapper around fetchMetaCampaigns since backend does the heavy lifting
  */
 export async function fetchCampaignsWithInsights() {
-    try {
-        const campaigns = await fetchMetaCampaigns();
-
-        // Fetch insights for each campaign
-        const campaignsWithInsights = await Promise.all(
-            campaigns.map(async (campaign) => {
-                const insights = await fetchCampaignInsights(campaign.id);
-                return {
-                    ...campaign,
-                    insights
-                };
-            })
-        );
-
-        return campaignsWithInsights;
-    } catch (error) {
-        console.error('Error fetching campaigns with insights:', error);
-        throw error;
-    }
+    return await fetchMetaCampaigns();
 }
 
 /**

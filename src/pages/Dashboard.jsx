@@ -108,7 +108,7 @@ export default function Dashboard({ onNavigate }) {
 
             console.log("Requesting phone call to:", phoneNumber);
 
-            const response = await fetch('http://localhost:3002/api/initiate-call', {
+            const response = await fetch('https://dentalclinic-backend-usfp.onrender.com/api/vapi/initiate-call', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

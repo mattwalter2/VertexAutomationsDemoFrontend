@@ -18,7 +18,7 @@ export const getVapi = () => {
 export async function fetchCalls(limit = 50) {
     try {
         // Use backend proxy to avoid CORS issues with Private Key
-        const response = await fetch(`http://localhost:3002/api/vapi/calls?limit=${limit}`, {
+        const response = await fetch(`https://dentalclinic-backend-usfp.onrender.com/api/vapi/calls?limit=${limit}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
