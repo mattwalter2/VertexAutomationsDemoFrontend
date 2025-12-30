@@ -1,67 +1,41 @@
 import { useState } from 'react'
-import { Eye, EyeOff, Lock, Mail, ArrowRight, ShieldCheck } from 'lucide-react'
+import { Eye, EyeOff, Lock, Mail, ArrowRight } from 'lucide-react'
+import { supabase } from '../services/supabaseClient'
 
-export default function Login({ onLogin }) {
+export default function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [loading, setLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
-    const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        setError(null)
         setLoading(true)
+        setError('')
 
-        // Simulate API call delay for realism
-        setTimeout(() => {
-            if (email === 'admin' && password === 'password') {
-                onLogin()
-            } else {
-                setError('Invalid credentials. Try admin / password.')
-                setLoading(false)
-            }
-        }, 1500)
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            })
+
+            if (error) throw error
+            // Auth state change will be picked up by App.jsx listener
+        } catch (err) {
+            setError(err.message)
+            console.error('Login error:', err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
-        <div className="min-h-screen w-full flex bg-white">
-            {/* Left Side - Hero Image */}
-            <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-slate-900">
-                <div className="absolute inset-0 z-10 bg-gradient-to-br from-indigo-900/40 to-slate-900/60 mix-blend-multiply" />
-                <img
-                    src="/login-bg.png"
-                    alt="Medical Technology Background"
-                    className="absolute inset-0 w-full h-full object-cover opacity-90 animate-subtle-zoom"
-                />
-                <div className="relative z-20 flex flex-col justify-center h-full px-12 text-white">
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="h-10 w-10 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20 shadow-lg">
-                            <ShieldCheck className="text-sky-400" size={24} />
-                        </div>
-                        <span className="text-xl font-bold tracking-tight">NovaSync Dental</span>
-                    </div>
-                    <h1 className="text-5xl font-bold leading-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-sky-100 to-sky-300">
-                        Intelligent Practice <br /> Management
-                    </h1>
-                    <p className="text-lg text-slate-300 max-w-md leading-relaxed">
-                        Securely manage patient data, appointments, and AI voice agents from a single unified dashboard.
-                    </p>
-                </div>
-
-                {/* Decorative Bottom Bar */}
-                <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500" />
-            </div>
-
-            {/* Right Side - Login Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-16 bg-white relative">
-                {/* Mobile Background Decoration */}
-                <div className="lg:hidden absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500" />
-
-                <div className="max-w-md w-full space-y-8">
-                    <div className="text-center lg:text-left">
-                        <div className="lg:hidden flex items-center justify-center gap-2 mb-6 text-slate-800">
-                            <ShieldCheck className="text-sky-600" size={28} />
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+            <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div className="p-8">
+                    <div className="text-center mb-8">
+                        <div className="w-12 h-12 bg-sky-600 rounded-xl mx-auto flex items-center justify-center text-white mb-4 shadow-lg shadow-sky-600/20">
                             <span className="text-2xl font-bold">NovaSync</span>
                         </div>
                         <h2 className="text-3xl font-bold text-slate-900">Welcome back</h2>
@@ -76,7 +50,7 @@ export default function Login({ onLogin }) {
                             <div className="relative">
                                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                                 <input
-                                    type="text"
+                                    type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all outline-none text-slate-900 placeholder:text-slate-400"

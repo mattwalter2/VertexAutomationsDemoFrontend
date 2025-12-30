@@ -4,6 +4,8 @@ import { fetchCalls, getCallStats, getVapi } from '../services/vapiService'
 import { fetchLeadsFromSheets } from '../services/googleSheetsService'
 import { fetchAppointments, formatAppointment } from '../services/googleCalendarService'
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002';
+
 export default function Dashboard({ onNavigate }) {
     const [stats, setStats] = useState({
         appointments: 0,
@@ -43,6 +45,7 @@ export default function Dashboard({ onNavigate }) {
         try {
             const callsData = await fetchCalls(10)
             const callStats = getCallStats(callsData)
+
             const leadsData = await fetchLeadsFromSheets()
             const aptsData = await fetchAppointments()
 
@@ -66,7 +69,7 @@ export default function Dashboard({ onNavigate }) {
 
             setStats({
                 appointments: aptsData.length,
-                leads: leadsData.length,
+                leads: leadsData.length, // leadsData is now the array from API
                 calls: callStats.totalCalls,
                 conversionRate
             })
@@ -115,7 +118,8 @@ export default function Dashboard({ onNavigate }) {
                 },
                 body: JSON.stringify({
                     phoneNumber: phoneNumber,
-                    name: 'Dashboard Admin'
+                    name: 'Matthew',
+                    procedure_interest: 'Invisalign'
                 })
             });
 

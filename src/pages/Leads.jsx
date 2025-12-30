@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Users, Phone, Mail, RefreshCw, X, Plus, Save } from 'lucide-react'
-import { fetchLeadsFromSheets, formatLeadData, getLeadStats } from '../services/googleSheetsService'
+import { fetchLeadsFromSheets, getLeadStats } from '../services/googleSheetsService'
 
 export default function Leads() {
     const [leads, setLeads] = useState([])
@@ -30,11 +30,10 @@ export default function Leads() {
     const loadLeads = async () => {
         setLoading(true)
         try {
-            const sheetsData = await fetchLeadsFromSheets()
-            const formattedLeads = sheetsData.map(formatLeadData)
-            setLeads(formattedLeads)
+            const data = await fetchLeadsFromSheets()
+            setLeads(data) // Backend formats it
 
-            const leadStats = getLeadStats(sheetsData)
+            const leadStats = getLeadStats(data)
             setStats(leadStats)
         } catch (error) {
             console.error('Failed to load leads:', error)

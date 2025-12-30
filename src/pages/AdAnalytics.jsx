@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { BarChart3, TrendingUp, DollarSign, Eye, MousePointer, Users, RefreshCw } from 'lucide-react'
-import { fetchCampaignsWithInsights, formatCampaignData, calculateAggregateStats } from '../services/metaAdsService'
+
+// Backend URL
+const BACKEND_API_URL = 'https://dentalclinic-backend-usfp.onrender.com';
 
 export default function AdAnalytics() {
     const [campaigns, setCampaigns] = useState([])
@@ -24,13 +26,23 @@ export default function AdAnalytics() {
         setError(null)
 
         try {
-            const campaignsData = await fetchCampaignsWithInsights()
-            const formattedCampaigns = campaignsData.map(formatCampaignData)
-            setCampaigns(formattedCampaigns)
+            // Direct fetch from backend
+            const response = await fetch(`${BACKEND_API_URL}/api/meta/campaigns`);
 
-            // Calculate aggregate stats
-            const aggregateStats = calculateAggregateStats(campaignsData)
-            setStats(aggregateStats)
+            if (!response.ok) {
+                throw new Error(`Failed to fetch campaigns: ${response.statusText}`);
+            }
+
+            const json = await response.json();
+            const rawCampaigns = json.data || [];
+
+            // Process data client-side since backend returns raw insights
+            const formattedCampaigns = rawCampaigns.map(formatCampaignData);
+            setCampaigns(formattedCampaigns);
+
+            const calculatedStats = calculateAggregateStats(formattedCampaigns);
+            setStats(calculatedStats);
+
         } catch (err) {
             setError(err.message)
             console.error('Failed to load Meta Ads data:', err)
@@ -39,18 +51,65 @@ export default function AdAnalytics() {
         }
     }
 
-    // Find best performing campaigns
+    // --- Helper Functions inlined ---
+
+    function formatCampaignData(campaign) {
+        const insights = campaign.insights || {};
+        const actions = insights.actions || [];
+
+        return {
+            id: campaign.id,
+            name: campaign.name,
+            status: campaign.effective_status?.toLowerCase() || 'unknown',
+            spend: parseFloat(insights.spend || 0),
+            impressions: parseInt(insights.impressions || 0),
+            clicks: parseInt(insights.clicks || 0),
+            ctr: parseFloat(insights.ctr || 0),
+            cpc: parseFloat(insights.cpc || 0),
+            cpm: parseFloat(insights.cpm || 0),
+            reach: parseInt(insights.reach || 0),
+            leads: extractActionValue(actions, ['lead', 'onsite_conversion.lead_grouped']),
+            conversions: extractActionValue(actions, ['offsite_conversion.fb_pixel_purchase', 'onsite_conversion.purchase'])
+        };
+    }
+
+    function extractActionValue(actions, types) {
+        if (!Array.isArray(actions)) return 0;
+        const action = actions.find(a => types.includes(a.action_type));
+        return action ? parseInt(action.value) : 0;
+    }
+
+    function calculateAggregateStats(campaignsList) {
+        const totals = campaignsList.reduce((acc, camp) => ({
+            totalSpend: acc.totalSpend + camp.spend,
+            totalImpressions: acc.totalImpressions + camp.impressions,
+            totalClicks: acc.totalClicks + camp.clicks,
+            totalLeads: acc.totalLeads + camp.leads,
+            totalReach: acc.totalReach + camp.reach
+        }), {
+            totalSpend: 0, totalImpressions: 0, totalClicks: 0, totalLeads: 0, totalReach: 0
+        });
+
+        return {
+            ...totals,
+            avgCTR: totals.totalImpressions > 0
+                ? ((totals.totalClicks / totals.totalImpressions) * 100).toFixed(2)
+                : '0.00',
+            avgCPC: totals.totalClicks > 0
+                ? (totals.totalSpend / totals.totalClicks).toFixed(2)
+                : '0.00'
+        };
+    }
+
+    // --- Comparison Logic ---
     const bestCTR = campaigns.length > 0
-        ? campaigns.reduce((best, campaign) => campaign.ctr > best.ctr ? campaign : best, campaigns[0])
-        : null;
+        ? campaigns.reduce((best, c) => c.ctr > best.ctr ? c : best, campaigns[0]) : null;
 
     const mostLeads = campaigns.length > 0
-        ? campaigns.reduce((best, campaign) => campaign.leads > best.leads ? campaign : best, campaigns[0])
-        : null;
+        ? campaigns.reduce((best, c) => c.leads > best.leads ? c : best, campaigns[0]) : null;
 
     const lowestCPC = campaigns.length > 0
-        ? campaigns.reduce((best, campaign) => campaign.cpc > 0 && campaign.cpc < best.cpc ? campaign : best, campaigns[0])
-        : null;
+        ? campaigns.reduce((best, c) => c.cpc > 0 && c.cpc < best.cpc ? c : best, campaigns[0]) : null;
 
     return (
         <div className="space-y-6">
@@ -77,7 +136,6 @@ export default function AdAnalytics() {
                         <p className="font-medium">Failed to load Meta Ads data</p>
                     </div>
                     <p className="text-sm text-red-600 mt-1">{error}</p>
-                    <p className="text-xs text-red-500 mt-2">Make sure VITE_META_ACCESS_TOKEN and VITE_META_AD_ACCOUNT_ID are set in your .env file</p>
                 </div>
             )}
 
@@ -199,10 +257,10 @@ export default function AdAnalytics() {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${campaign.status === 'active'
-                                                        ? 'bg-green-100 text-green-700'
-                                                        : campaign.status === 'paused'
-                                                            ? 'bg-yellow-100 text-yellow-700'
-                                                            : 'bg-gray-100 text-gray-700'
+                                                    ? 'bg-green-100 text-green-700'
+                                                    : campaign.status === 'paused'
+                                                        ? 'bg-yellow-100 text-yellow-700'
+                                                        : 'bg-gray-100 text-gray-700'
                                                     }`}>
                                                     {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
                                                 </span>

@@ -1,62 +1,41 @@
-const API_BASE_URL = 'http://localhost:3001';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://dentalclinic-backend-usfp.onrender.com';
 
 /**
- * Fetch leads from Google Sheets via API server
+ * Fetch leads from the backend API
+ * Backend now handles formatting, so we receive clean JSON objects.
  */
 export async function fetchLeadsFromSheets() {
     try {
         const response = await fetch(`${API_BASE_URL}/api/leads`);
-
         if (!response.ok) {
             throw new Error(`Failed to fetch leads: ${response.statusText}`);
         }
-
-        const data = await response.json();
-        return data;
+        return await response.json();
     } catch (error) {
-        console.error('Error fetching leads from Google Sheets:', error);
+        console.error('Error fetching leads:', error);
         throw error;
     }
 }
 
 /**
- * Format lead data for display
- * Adapts to the actual column names from your Google Form
+ * Fetch follow-ups from the backend API
  */
-export function formatLeadData(lead) {
-    // Map Google Form columns to our format
-    // Adjust these field names based on your actual form columns
-    const timestamp = lead['Timestamp'] || lead['timestamp'] || new Date().toISOString();
-    const name = lead['Name'] || lead['Full Name'] || lead['name'] || 'Unknown';
-    const email = lead['Email'] || lead['Email Address'] || lead['email'] || 'N/A';
-    const phone = lead['Phone'] || lead['Phone Number'] || lead['phone'] || 'N/A';
-    const treatment = lead['Treatment'] || lead['Service Interested'] || lead['treatment'] || 'General';
-    const budget = lead['Budget'] || lead['Budget Range'] || lead['budget'] || 'Not specified';
-    const notes = lead['Notes'] || lead['Additional Information'] || lead['notes'] || '';
-    const preferredDate = lead['Preferred Date'] || lead['preferred_date'] || '';
-
-    return {
-        id: lead.id || timestamp,
-        name,
-        email,
-        phone,
-        treatment,
-        budget,
-        date: new Date(timestamp).toLocaleDateString('en-US'),
-        time: new Date(timestamp).toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit'
-        }),
-        notes,
-        status: lead.status || 'new',
-        source: 'Google Form',
-        preferredDate,
-        rawData: lead // Keep original data for reference
-    };
+export async function fetchFollowUpsFromSheets() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/followups`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch follow-ups: ${response.statusText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching follow-ups:', error);
+        throw error;
+    }
 }
 
 /**
- * Get lead statistics
+ * Calculate lead statistics from the data array
  */
 export function getLeadStats(leads) {
     const statusCounts = leads.reduce((acc, lead) => {
@@ -72,4 +51,12 @@ export function getLeadStats(leads) {
         qualified: statusCounts.qualified || 0,
         converted: statusCounts.converted || 0
     };
+}
+
+/**
+ * Legacy formatter - kept for compatibility if needed, but backend does this now.
+ * Pass-through or minor adjustments can go here.
+ */
+export function formatLeadData(lead) {
+    return lead; // Backend already formats it
 }

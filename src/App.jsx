@@ -1,4 +1,5 @@
-import { useState } from 'react'
+
+import { useState, useEffect } from 'react'
 import './App.css'
 import Sidebar from './components/layout/Sidebar'
 import Header from './components/layout/Header'
@@ -11,14 +12,27 @@ import Calls from './pages/Calls'
 import AdAnalytics from './pages/AdAnalytics'
 import UniversalInbox from './pages/UniversalInbox'
 import Login from './pages/Login'
+import { supabase } from './services/supabaseClient'
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [session, setSession] = useState(null)
   const [currentPage, setCurrentPage] = useState('dashboard')
 
-  const handleLogin = () => {
-    setIsAuthenticated(true)
-  }
+  useEffect(() => {
+    // 1. Check active session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+    })
+
+    // 2. Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
 
   const renderPage = () => {
     switch (currentPage) {
@@ -43,8 +57,9 @@ function App() {
     }
   }
 
-  if (!isAuthenticated) {
-    return <Login onLogin={handleLogin} />
+  // Guard: If no session, show Login
+  if (!session) {
+    return <Login />
   }
 
   return (

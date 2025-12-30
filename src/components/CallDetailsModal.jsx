@@ -89,17 +89,34 @@ export default function CallDetailsModal({ call, onClose }) {
 
                             <div className="flex-1 overflow-y-auto bg-slate-50 rounded-xl border border-slate-200 p-4 space-y-4">
                                 {call.messages && call.messages.length > 0 ? (
-                                    call.messages.map((msg, idx) => (
-                                        <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                            <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${msg.role === 'user'
+                                    call.messages.map((msg, idx) => {
+                                        // Extract content from various possible fields
+                                        let content = msg.content || msg.message || msg.text || '';
+
+                                        // Special handling for tool calls if content is empty
+                                        if (msg.role === 'tool_calls' && !content) {
+                                            content = `Called tools: ${msg.toolCalls?.map(t => t.function.name).join(', ')}`;
+                                        } else if (msg.role === 'tool_call_result' && !content) {
+                                            content = `Result: ${typeof msg.result === 'string' ? msg.result : JSON.stringify(msg.result)}`;
+                                        }
+
+                                        // Skip empty messages if not tool related (or show placeholder)
+                                        if (!content) content = '(No content)';
+
+                                        return (
+                                            <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                                <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${msg.role === 'user'
                                                     ? 'bg-blue-600 text-white rounded-tr-sm'
-                                                    : 'bg-white border border-slate-200 text-slate-700 rounded-tl-sm shadow-sm'
-                                                }`}>
-                                                <p className="font-medium text-xs opacity-70 mb-1 capitalize">{msg.role}</p>
-                                                {msg.content}
+                                                    : msg.role === 'tool_calls' || msg.role === 'tool_call_result'
+                                                        ? 'bg-slate-100 text-slate-600 border border-slate-200 italic font-mono text-xs'
+                                                        : 'bg-white border border-slate-200 text-slate-700 rounded-tl-sm shadow-sm'
+                                                    }`}>
+                                                    <p className="font-medium text-xs opacity-70 mb-1 capitalize">{msg.role.replace(/_/g, ' ')}</p>
+                                                    <div className="whitespace-pre-wrap">{content}</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))
+                                        );
+                                    })
                                 ) : (
                                     <p className="text-slate-500 text-sm whitespace-pre-wrap">
                                         {call.fullTranscript || call.transcript || "No transcript data."}
