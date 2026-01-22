@@ -29,7 +29,7 @@ export default function UniversalInbox() {
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const response = await fetch('https://dentalclinic-backend-usfp.onrender.com/api/messages')
+                const response = await fetch('https://nourdemodashboardbackend.onrender.com/api/messages')
                 const data = await response.json()
 
                 if (data && data.length > 0) {
@@ -150,8 +150,8 @@ export default function UniversalInbox() {
 
             // Actual API Call
             const endpoint = selectedChat.platform === 'instagram'
-                ? 'https://dentalclinic-backend-usfp.onrender.com/api/instagram/send'
-                : 'https://dentalclinic-backend-usfp.onrender.com/api/whatsapp/send';
+                ? 'https://nourdemodashboardbackend.onrender.com/api/instagram/send'
+                : 'https://nourdemodashboardbackend.onrender.com/api/whatsapp/send';
 
             await fetch(endpoint, {
                 method: 'POST',

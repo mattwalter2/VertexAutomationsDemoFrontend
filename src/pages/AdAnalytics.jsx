@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { BarChart3, TrendingUp, DollarSign, Eye, MousePointer, Users, RefreshCw } from 'lucide-react'
 
 // Backend URL
-const BACKEND_API_URL = 'https://dentalclinic-backend-usfp.onrender.com';
+const BACKEND_API_URL = 'https://nourdemodashboardbackend.onrender.com';
 
 export default function AdAnalytics() {
     const [campaigns, setCampaigns] = useState([])
