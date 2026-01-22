@@ -44,10 +44,10 @@ export async function fetchCalls(limit = 50) {
  */
 export async function fetchCallById(callId) {
     try {
-        const response = await fetch(`${VAPI_BASE_URL}/call/${callId}`, {
+        const API_URL = import.meta.env.VITE_API_URL || 'https://nourdemodashboardbackend.onrender.com';
+        const response = await fetch(`${API_URL}/api/vapi/calls/${callId}`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${VAPI_API_KEY}`,
                 'Content-Type': 'application/json'
             }
         });

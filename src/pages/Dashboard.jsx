@@ -23,22 +23,24 @@ export default function Dashboard({ onNavigate }) {
         loadDashboardData()
     }, [])
 
-    // Listen to Vapi events
-    useEffect(() => {
-        const vapi = getVapi();
-        vapi.on('call-start', () => {
-            setIsCalling(false);
-            setActiveCall('in-progress');
-        });
-        vapi.on('call-end', () => {
-            setActiveCall(null);
-        });
-        vapi.on('error', (e) => {
-            console.error("Vapi Error:", e);
-            setIsCalling(false);
-            setActiveCall(null);
-        });
-    }, []);
+    // Listen to Vapi events (Commented out to avoid invalid Public Key error)
+    // useEffect(() => {
+    //     const vapi = getVapi();
+    //     if (vapi) {
+    //         vapi.on('call-start', () => {
+    //             setIsCalling(false);
+    //             setActiveCall('in-progress');
+    //         });
+    //         vapi.on('call-end', () => {
+    //             setActiveCall(null);
+    //         });
+    //         vapi.on('error', (e) => {
+    //             console.error("Vapi Error:", e);
+    //             setIsCalling(false);
+    //             setActiveCall(null);
+    //         });
+    //     }
+    // }, []);
 
     const loadDashboardData = async () => {
         setLoading(true)
