@@ -17,8 +17,9 @@ export const getVapi = () => {
  */
 export async function fetchCalls(limit = 50) {
     try {
+        const API_URL = import.meta.env.VITE_API_URL || 'https://nourdemodashboardbackend.onrender.com';
         // Use backend proxy to avoid CORS issues with Private Key
-        const response = await fetch(`https://nourdemodashboardbackend.onrender.com/api/vapi/calls?limit=${limit}&assistantId=3fb1aa80-de47-4363-9c8e-c66d8f387587`, {
+        const response = await fetch(`${API_URL}/api/vapi/calls?limit=${limit}&assistantId=3fb1aa80-de47-4363-9c8e-c66d8f387587`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
