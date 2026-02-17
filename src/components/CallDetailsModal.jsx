@@ -66,7 +66,7 @@ export default function CallDetailsModal({ call, onClose }) {
                                 <h3>Call Summary</h3>
                             </div>
                             <div className="bg-indigo-50/50 p-5 rounded-xl border border-indigo-100 text-slate-700 leading-relaxed text-sm md:text-base">
-                                {call.summary || "No summary available for this call."}
+                                {typeof call.summary === 'string' ? call.summary : JSON.stringify(call.summary) || "No summary available for this call."}
                             </div>
 
                             {call.recordingUrl && (
