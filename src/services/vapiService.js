@@ -107,21 +107,8 @@ export function formatCallData(call) {
     // Extract transcript
     const fullTranscript = call.transcript || call.messages?.map(m => m.content).join(' ') || 'No transcript available';
     const messages = call.messages || [];
-    // Debugging: Log the call object to inspect structure
-    console.log("Processing Call Data:", call);
-
-    let summary = 'No summary available';
-    if (call.analysis) {
-        if (typeof call.analysis === 'string') {
-            summary = call.analysis;
-        } else if (call.analysis.summary) {
-            summary = call.analysis.summary;
-        } else if (call.analysis.result) {
-            summary = call.analysis.result;
-        }
-    } else if (call.summary) {
-        summary = call.summary;
-    }
+    // Extract summary from Vapi analysis object
+    const summary = call.analysis?.summary || 'No summary available';
 
 
     // Detect language (simplified)
