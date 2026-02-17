@@ -369,19 +369,7 @@ export default function Dashboard({ onNavigate }) {
                     <h2 className="text-2xl font-bold mb-2">Quick Actions</h2>
                     <p className="text-slate-400 mb-8 max-w-lg">Instantly launch key workflows. Your AI assistant is ready to handle calls or manage your schedule.</p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {/* Book Appointment */}
-                        <button
-                            onClick={() => onNavigate('appointments')}
-                            className="group bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-sm rounded-xl p-5 text-left transition-all hover:-translate-y-1 hover:shadow-lg"
-                        >
-                            <div className="mb-4 w-12 h-12 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-all">
-                                <Calendar size={24} />
-                            </div>
-                            <h3 className="text-lg font-bold mb-1">Book Schedule</h3>
-                            <p className="text-sm text-slate-400 group-hover:text-slate-300">Add new appointment</p>
-                        </button>
-
+                    <div className="grid grid-cols-1 gap-6 max-w-md mx-auto">
                         {/* Test Call - Special Style */}
                         <button
                             onClick={handleTestCallClick}
@@ -401,19 +389,6 @@ export default function Dashboard({ onNavigate }) {
                             </h3>
                             <p className="text-sm text-slate-400 group-hover:text-slate-300">{activeCall ? 'Click to hang up' : 'Start interactive demo'}</p>
                         </button>
-
-                        {/* Add Lead */}
-                        <button
-                            onClick={() => onNavigate('leads')}
-                            className="group bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-sm rounded-xl p-5 text-left transition-all hover:-translate-y-1 hover:shadow-lg"
-                        >
-                            <div className="mb-4 w-12 h-12 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition-all">
-                                <Users size={24} />
-                            </div>
-                            <h3 className="text-lg font-bold mb-1">Add Lead</h3>
-                            <p className="text-sm text-slate-400 group-hover:text-slate-300">Record new patient</p>
-                        </button>
-
                     </div>
                 </div>
             </div>
