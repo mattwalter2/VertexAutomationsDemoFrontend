@@ -1,8 +1,12 @@
-import { Home, Calendar, Users, Phone, BarChart3, Settings, MessageSquare, CalendarClock } from 'lucide-react'
+import { Home, Calendar, Users, Phone, BarChart3, Settings, MessageSquare, CalendarClock, UserPlus } from 'lucide-react'
 
 export default function Sidebar({ currentPage, setCurrentPage }) {
     const menuItems = [
         { id: 'dashboard', label: 'Dashboard', icon: Home },
+        { id: 'leads', label: 'Leads', icon: UserPlus },
+        { id: 'followups', label: 'Follow Ups', icon: MessageSquare },
+        { id: 'appointments', label: 'Schedule', icon: Calendar },
+        { id: 'customers', label: 'Customers', icon: Users },
         { id: 'calls', label: 'Call Logs', icon: Phone },
     ]
 
@@ -13,7 +17,7 @@ export default function Sidebar({ currentPage, setCurrentPage }) {
                 <div className="flex items-center gap-3">
                     <div className="text-2xl text-brand-secondary">❄️</div>
                     <div>
-                        <h1 className="text-lg font-bold text-slate-200 leading-tight">Davis Mechanical<br /><span className="text-brand-secondary">HVAC</span></h1>
+                        <h1 className="text-lg font-bold text-slate-200 leading-tight">Rapid Response<br /><span className="text-brand-secondary">Plumbing</span></h1>
                     </div>
                 </div>
             </div>

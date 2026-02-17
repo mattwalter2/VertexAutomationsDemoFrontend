@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import { Users, Phone, Mail, Calendar, Search, UserPlus, X, Save, Activity } from 'lucide-react'
 import { fetchCalls } from '../services/vapiService'
 
-export default function Patients() {
-    const [patients, setPatients] = useState([])
+export default function Customers() {
+    const [customers, setCustomers] = useState([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -11,7 +11,7 @@ export default function Patients() {
         name: '',
         phone: '',
         email: '',
-        lastVisit: '',
+        lastService: '',
         insurance: '',
         notes: ''
     })
@@ -39,7 +39,7 @@ export default function Patients() {
                         email: call.customer?.email || 'N/A',
                         totalCalls: 1,
                         lastCall: new Date(call.createdAt),
-                        treatments: [],
+                        services: [],
                         status: call.status
                     })
                 } else {
@@ -56,17 +56,17 @@ export default function Patients() {
             const patientsArray = Array.from(patientMap.values())
                 .sort((a, b) => b.lastCall - a.lastCall)
 
-            setPatients(patientsArray)
+            setCustomers(patientsArray)
         } catch (error) {
-            console.error('Failed to load patients:', error)
+            console.error('Failed to load customers:', error)
         } finally {
             setLoading(false)
         }
     }
 
-    const filteredPatients = patients.filter(patient =>
-        patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        patient.phone.includes(searchTerm)
+    const filteredCustomers = customers.filter(customer =>
+        customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        customer.phone.includes(searchTerm)
     )
 
     const handleInputChange = (e) => {
@@ -79,7 +79,7 @@ export default function Patients() {
 
     const handleAddSubmit = (e) => {
         e.preventDefault()
-        const newPatient = {
+        const newCustomer = {
             name: formData.name,
             phone: formData.phone,
             email: formData.email || 'N/A',
@@ -87,20 +87,20 @@ export default function Patients() {
             lastCall: new Date(), // Created now
             manualEntry: true,
             status: 'Active',
-            lastVisit: formData.lastVisit,
+            lastService: formData.lastService,
             insurance: formData.insurance,
             notes: formData.notes
         }
 
         // Add to local state (prepend)
-        setPatients(prev => [newPatient, ...prev])
+        setCustomers(prev => [newCustomer, ...prev])
 
         setIsModalOpen(false)
         setFormData({
             name: '',
             phone: '',
             email: '',
-            lastVisit: '',
+            lastService: '',
             insurance: '',
             notes: ''
         })
@@ -111,28 +111,28 @@ export default function Patients() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Patients</h1>
-                    <p className="text-gray-500 mt-1">Manage all patient records and contact information</p>
+                    <h1 className="text-2xl font-bold text-gray-900">Customers</h1>
+                    <p className="text-gray-500 mt-1">Manage all customer records and contact information</p>
                 </div>
                 <button
                     onClick={() => setIsModalOpen(true)}
                     className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 shadow-md hover:shadow-lg transition-all"
                 >
                     <UserPlus size={20} />
-                    Add Patient
+                    Add Customer
                 </button>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-white rounded-lg border border-gray-200 p-4">
-                    <p className="text-sm text-gray-600">Total Patients</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-2">{patients.length}</p>
+                    <p className="text-sm text-gray-600">Total Customers</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-2">{customers.length}</p>
                 </div>
                 <div className="bg-white rounded-lg border border-gray-200 p-4">
                     <p className="text-sm text-gray-600">Active This Week</p>
                     <p className="text-2xl font-bold text-gray-900 mt-2">
-                        {patients.filter(p => {
+                        {customers.filter(p => {
                             const weekAgo = new Date()
                             weekAgo.setDate(weekAgo.getDate() - 7)
                             return p.lastCall > weekAgo
@@ -142,7 +142,7 @@ export default function Patients() {
                 <div className="bg-white rounded-lg border border-gray-200 p-4">
                     <p className="text-sm text-gray-600">New This Month</p>
                     <p className="text-2xl font-bold text-gray-900 mt-2">
-                        {patients.filter(p => {
+                        {customers.filter(p => {
                             const monthAgo = new Date()
                             monthAgo.setMonth(monthAgo.getMonth() - 1)
                             return p.lastCall > monthAgo
@@ -157,7 +157,7 @@ export default function Patients() {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                     <input
                         type="text"
-                        placeholder="Search patients by name or phone..."
+                        placeholder="Search customers by name or phone..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
@@ -170,27 +170,27 @@ export default function Patients() {
                 <div className="flex items-center justify-center py-12">
                     <div className="text-center">
                         <Users size={40} className="animate-pulse text-sky-500 mx-auto mb-4" />
-                        <p className="text-gray-600">Loading patients...</p>
+                        <p className="text-gray-600">Loading customers...</p>
                     </div>
                 </div>
             )}
 
-            {/* Patients Grid */}
-            {!loading && filteredPatients.length === 0 && (
+            {/* Customers Grid */}
+            {!loading && filteredCustomers.length === 0 && (
                 <div className="bg-gray-50 rounded-lg p-12 text-center">
                     <Users size={48} className="text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No patients found</h3>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No customers found</h3>
                     <p className="text-gray-600">
-                        {searchTerm ? 'Try a different search term' : 'Add a patient manually or make calls to populate this list'}
+                        {searchTerm ? 'Try a different search term' : 'Add a customer manually or make calls to populate this list'}
                     </p>
                 </div>
             )}
 
-            {!loading && filteredPatients.length > 0 && (
+            {!loading && filteredCustomers.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {filteredPatients.map((patient, index) => (
+                    {filteredCustomers.map((customer, index) => (
                         <div key={index} className="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow relative overflow-hidden">
-                            {patient.manualEntry && (
+                            {customer.manualEntry && (
                                 <div className="absolute top-0 right-0 bg-sky-100 text-sky-600 text-[10px] px-2 py-0.5 rounded-bl-lg font-medium">
                                     MANUAL
                                 </div>
@@ -203,9 +203,9 @@ export default function Patients() {
                                         {patient.name.charAt(0).toUpperCase()}
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold text-gray-900">{patient.name}</h3>
+                                        <h3 className="font-semibold text-gray-900">{customer.name}</h3>
                                         <p className="text-xs text-gray-500">
-                                            Added: {patient.lastCall.toLocaleDateString()}
+                                            Added: {customer.lastCall.toLocaleDateString()}
                                         </p>
                                     </div>
                                 </div>
@@ -215,16 +215,16 @@ export default function Patients() {
                             <div className="space-y-2 mb-4">
                                 <div className="flex items-center gap-2 text-sm text-gray-600">
                                     <Phone size={14} className="text-gray-400" />
-                                    <span>{patient.phone}</span>
+                                    <span>{customer.phone}</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-sm text-gray-600">
                                     <Mail size={14} className="text-gray-400" />
-                                    <span className="truncate">{patient.email}</span>
+                                    <span className="truncate">{customer.email}</span>
                                 </div>
-                                {patient.insurance && (
+                                {customer.insurance && (
                                     <div className="flex items-center gap-2 text-sm text-gray-600">
                                         <Activity size={14} className="text-gray-400" />
-                                        <span className="truncate">{patient.insurance}</span>
+                                        <span className="truncate">{customer.insurance}</span>
                                     </div>
                                 )}
                             </div>
@@ -233,7 +233,7 @@ export default function Patients() {
                             <div className="pt-3 border-t border-gray-200">
                                 <div className="flex items-center justify-between text-sm">
                                     <span className="text-gray-600">Total Calls:</span>
-                                    <span className="font-medium text-gray-900">{patient.totalCalls}</span>
+                                    <span className="font-medium text-gray-900">{customer.totalCalls}</span>
                                 </div>
                             </div>
 
@@ -256,7 +256,7 @@ export default function Patients() {
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
                         <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-                            <h2 className="text-lg font-bold text-gray-900">Register New Patient</h2>
+                            <h2 className="text-lg font-bold text-gray-900">Register New Customer</h2>
                             <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-700">
                                 <X size={20} />
                             </button>
@@ -303,11 +303,11 @@ export default function Patients() {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Last Visit</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Last Service</label>
                                     <input
                                         type="date"
-                                        name="lastVisit"
-                                        value={formData.lastVisit}
+                                        name="lastService"
+                                        value={formData.lastService}
                                         onChange={handleInputChange}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
                                     />
@@ -326,7 +326,7 @@ export default function Patients() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Medical Notes</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Job Notes</label>
                                 <textarea
                                     name="notes"
                                     rows="3"
@@ -350,7 +350,7 @@ export default function Patients() {
                                     className="flex-1 px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 font-medium flex items-center justify-center gap-2"
                                 >
                                     <Save size={18} />
-                                    Register Patient
+                                    Register Customer
                                 </button>
                             </div>
                         </form>

@@ -6,7 +6,7 @@ import Header from './components/layout/Header'
 import Dashboard from './pages/Dashboard'
 import Appointments from './pages/Appointments'
 import FollowUps from './pages/FollowUps'
-import Patients from './pages/Patients'
+import Customers from './pages/Customers'
 import Leads from './pages/Leads'
 import Calls from './pages/Calls'
 import AdAnalytics from './pages/AdAnalytics'
@@ -42,8 +42,8 @@ function App() {
         return <Appointments />
       case 'followups':
         return <FollowUps />
-      case 'patients':
-        return <Patients />
+      case 'customers':
+        return <Customers />
       case 'leads':
         return <Leads />
       case 'calls':

@@ -17,7 +17,7 @@ export default function Leads() {
         name: '',
         phone: '',
         email: '',
-        treatment: '',
+        service: '',
         budget: '',
         source: 'Manual Entry',
         notes: ''
@@ -60,7 +60,7 @@ export default function Leads() {
             name: formData.name,
             phone: formData.phone,
             email: formData.email,
-            treatment: formData.treatment || 'Consultation',
+            service: formData.service || 'Consultation',
             budget: formData.budget || 'N/A',
             source: formData.source,
             notes: formData.notes
@@ -81,7 +81,7 @@ export default function Leads() {
             name: '',
             phone: '',
             email: '',
-            treatment: '',
+            service: '',
             budget: '',
             source: 'Manual Entry',
             notes: ''
@@ -108,8 +108,8 @@ export default function Leads() {
                     phoneNumber: lead.phone,
                     name: lead.name,
                     variables: {
-                        patient_name: lead.name,
-                        projected_treatment: lead.treatment,
+                        customer_name: lead.name,
+                        projected_service: lead.service,
                         budget: lead.budget,
                         lead_source: lead.source,
                         notes: lead.notes || "None"
@@ -142,7 +142,7 @@ export default function Leads() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Leads</h1>
-                    <p className="text-gray-500 mt-1">Manage potential patients and inquiries</p>
+                    <p className="text-gray-500 mt-1">Manage potential customers and inquiries</p>
                 </div>
                 <div className="flex gap-2">
                     <button
@@ -242,8 +242,8 @@ export default function Leads() {
                             {/* Treatment & Budget */}
                             <div className="space-y-2 pt-3 border-t border-gray-200">
                                 <div className="flex items-center justify-between text-sm">
-                                    <span className="text-gray-600">Treatment:</span>
-                                    <span className="font-medium text-gray-900">{lead.treatment}</span>
+                                    <span className="text-gray-600">Service:</span>
+                                    <span className="font-medium text-gray-900">{lead.service}</span>
                                 </div>
                                 <div className="flex items-center justify-between text-sm">
                                     <span className="text-gray-600">Budget:</span>
@@ -330,19 +330,20 @@ export default function Leads() {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Treatment</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Service</label>
                                     <select
-                                        name="treatment"
-                                        value={formData.treatment}
+                                        name="service"
+                                        value={formData.service}
                                         onChange={handleInputChange}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
                                     >
                                         <option value="">Select...</option>
                                         <option value="Consultation">Consultation</option>
-                                        <option value="Dental Cleaning">Dental Cleaning</option>
-                                        <option value="Invisalign">Invisalign</option>
-                                        <option value="Root Canal">Root Canal</option>
-                                        <option value="Whitening">Whitening</option>
+                                        <option value="Leak Repair">Leak Repair</option>
+                                        <option value="Drain Cleaning">Drain Cleaning</option>
+                                        <option value="Water Heater">Water Heater</option>
+                                        <option value="Pipe Installation">Pipe Installation</option>
+                                        <option value="Emergency Service">Emergency Service</option>
                                     </select>
                                 </div>
                                 <div>

@@ -21,11 +21,11 @@ export default function FollowUps() {
                 const hasAppointment = item.date && item.time && item.date !== 'N/A';
 
                 // 1. Primary Identifier
-                const displayName = item.name || item.phone || "Unknown Patient";
+                const displayName = item.name || item.phone || "Unknown Customer";
 
                 // 2. Appointment Context
                 const context = hasAppointment
-                    ? `${item.treatment || 'Appointment'} · ${item.date} at ${item.time}${item.location ? ` (${item.location})` : ''}`
+                    ? `${item.service || 'Appointment'} · ${item.date} at ${item.time}${item.location ? ` (${item.location})` : ''}`
                     : 'New Inquiry · No appointment scheduled';
 
                 // 3. Derived Tags (Based on reminder_stage form backend)
@@ -86,7 +86,7 @@ export default function FollowUps() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800">Follow-Up System</h1>
-                    <p className="text-slate-500 mt-1">Manage patient follow-ups and reminders</p>
+                    <p className="text-slate-500 mt-1">Manage customer follow-ups and reminders</p>
                 </div>
                 <div className="flex gap-2">
                     <button
@@ -131,7 +131,7 @@ export default function FollowUps() {
                             {loading ? (
                                 <div className="p-12 text-center">
                                     <RefreshCw className="animate-spin h-8 w-8 text-indigo-500 mx-auto mb-2" />
-                                    <p className="text-slate-500">Syncing patient data...</p>
+                                    <p className="text-slate-500">Syncing customer data...</p>
                                 </div>
                             ) : followUps.length === 0 ? (
                                 <div className="p-12 text-center text-slate-500">All caught up! No active follow-ups.</div>
