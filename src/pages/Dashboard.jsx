@@ -163,13 +163,7 @@ export default function Dashboard({ onNavigate }) {
             color: 'blue',
             desc: 'Scheduled in Calendar'
         },
-        {
-            label: 'New Leads',
-            value: stats.leads,
-            icon: Users,
-            color: 'indigo',
-            desc: 'From Google Forms'
-        },
+
         {
             label: 'Total Calls',
             value: stats.calls,
