@@ -1,5 +1,5 @@
 // Removed frontend env vars - data now comes from backend
-const BACKEND_API_URL = 'https://nourdemodashboardbackend.onrender.com'; // Production URL
+const BACKEND_API_URL = 'https://vertexautomationsdemo.onrender.com'; // Production URL
 
 /**
  * Fetch detailed campaigns and stats from Backend
