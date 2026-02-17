@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://nourdemodashboardbackend.onrender.com';
+const API_BASE_URL = 'http://localhost:3001';
 
 /**
  * Fetch appointments from Google Calendar via API server
