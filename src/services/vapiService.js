@@ -153,8 +153,17 @@ export function getCallStats(calls) {
     const avgMinutes = Math.floor(avgDuration / 60);
     const avgSeconds = Math.floor(avgDuration % 60);
 
+    const now = new Date();
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
+    const callsToday = calls.filter(call => {
+        const callDate = new Date(call.createdAt || call.created_at).getTime();
+        return callDate >= startOfDay;
+    }).length;
+
     return {
         totalCalls,
+        callsToday,
         completedCalls,
         activeCalls,
         successRate: totalCalls > 0 ? Math.round((completedCalls / totalCalls) * 100) : 0,

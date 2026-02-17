@@ -47,7 +47,7 @@ export default function Dashboard({ onNavigate }) {
     const loadDashboardData = async () => {
         setLoading(true)
         try {
-            const callsData = await fetchCalls(10)
+            const callsData = await fetchCalls(100)
             const callStats = getCallStats(callsData)
 
             // const leadsData = await fetchLeadsFromSheets()
@@ -73,8 +73,8 @@ export default function Dashboard({ onNavigate }) {
 
             setStats({
                 appointments: aptsData.length,
-                leads: leadsData.length, // leadsData is now the array from API
-                calls: callStats.totalCalls,
+                leads: [],
+                calls: callStats.callsToday,
                 conversionRate
             })
         } catch (error) {
@@ -165,7 +165,7 @@ export default function Dashboard({ onNavigate }) {
         },
 
         {
-            label: 'Total Calls',
+            label: 'Calls Today',
             value: stats.calls,
             icon: Phone,
             color: 'emerald',
