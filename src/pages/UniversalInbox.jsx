@@ -29,7 +29,7 @@ export default function UniversalInbox() {
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const response = await fetch('https://vertexautomationsdemo.onrender.com/api/messages')
+                const response = await fetch('https://vertexautomationsdemobackend.onrender.com/api/messages')
                 const data = await response.json()
 
                 if (data && data.length > 0) {
@@ -150,8 +150,8 @@ export default function UniversalInbox() {
 
             // Actual API Call
             const endpoint = selectedChat.platform === 'instagram'
-                ? 'https://vertexautomationsdemo.onrender.com/api/instagram/send'
-                : 'https://vertexautomationsdemo.onrender.com/api/whatsapp/send';
+                ? 'https://vertexautomationsdemobackend.onrender.com/api/instagram/send'
+                : 'https://vertexautomationsdemobackend.onrender.com/api/whatsapp/send';
 
             await fetch(endpoint, {
                 method: 'POST',

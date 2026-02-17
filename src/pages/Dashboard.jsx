@@ -4,7 +4,7 @@ import { fetchCalls, getCallStats, getVapi } from '../services/vapiService'
 import { fetchLeadsFromSheets } from '../services/googleSheetsService'
 import { fetchAppointments, formatAppointment } from '../services/googleCalendarService'
 
-const API_BASE_URL = 'https://vertexautomationsdemo.onrender.com';
+const API_BASE_URL = 'https://vertexautomationsdemobackend.onrender.com';
 
 export default function Dashboard({ onNavigate }) {
     const [stats, setStats] = useState({

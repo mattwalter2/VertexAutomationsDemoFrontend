@@ -1,5 +1,5 @@
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://vertexautomationsdemo.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://vertexautomationsdemobackend.onrender.com';
 
 /**
  * Fetch leads from the backend API

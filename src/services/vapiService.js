@@ -17,8 +17,8 @@ export const getVapi = () => {
  */
 export async function fetchCalls(limit = 50) {
     try {
-        // const API_URL = import.meta.env.VITE_API_URL || 'https://vertexautomationsdemo.onrender.com';
-        const API_URL = 'https://vertexautomationsdemo.onrender.com';
+        // const API_URL = import.meta.env.VITE_API_URL || 'https://vertexautomationsdemobackend.onrender.com';
+        const API_URL = 'https://vertexautomationsdemobackend.onrender.com';
         // Use backend proxy to avoid CORS issues with Private Key
         const response = await fetch(`${API_URL}/api/vapi/calls?limit=${limit}&assistantId=3fb1aa80-de47-4363-9c8e-c66d8f387587`, {
             method: 'GET',
@@ -44,7 +44,7 @@ export async function fetchCalls(limit = 50) {
  */
 export async function fetchCallById(callId) {
     try {
-        const API_URL = import.meta.env.VITE_API_URL || 'https://vertexautomationsdemo.onrender.com';
+        const API_URL = import.meta.env.VITE_API_URL || 'https://vertexautomationsdemobackend.onrender.com';
         const response = await fetch(`${API_URL}/api/vapi/calls/${callId}`, {
             method: 'GET',
             headers: {

@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://vertexautomationsdemo.onrender.com';
+const API_BASE_URL = 'https://vertexautomationsdemobackend.onrender.com';
 
 /**
  * Fetch appointments from Google Calendar via API server
