@@ -26,28 +26,36 @@ export function formatAppointment(apt) {
     const startDate = new Date(apt.start);
     const endDate = new Date(apt.end);
 
-    // Try to parse patient name and treatment from summary (e.g. "Dental Cleaning - John Doe")
-    let patient = 'Unknown Patient';
-    let treatment = apt.summary || 'Consultation';
+    // Try to parse customer name and service from summary (e.g. "Plumbing Service: John Doe")
+    let customer = 'Unknown Customer';
+    let service = apt.summary || 'Service Call';
 
-    if (apt.summary && apt.summary.includes('-')) {
-        const parts = apt.summary.split('-');
+    if (apt.summary && apt.summary.includes(':')) {
+        const parts = apt.summary.split(':');
         if (parts.length >= 2) {
-            treatment = parts[0].trim();
-            patient = parts[1].trim();
+            service = parts[0].trim(); // e.g. "Plumbing Service"
+            customer = parts[1].trim(); // e.g. "John Doe"
         }
-    } else if (apt.description && apt.description.includes('Patient:')) {
-        // Or check description for "Patient: Name"
-        const match = apt.description.match(/Patient:\s*(.*)/i);
+    } else if (apt.description && (apt.description.includes('Customer:') || apt.description.includes('Patient:'))) {
+        // Check description for "Customer: Name" (or legacy Patient)
+        const match = apt.description.match(/(?:Customer|Patient):\s*(.*)/i);
         if (match) {
-            patient = match[1].trim();
+            customer = match[1].split('.')[0].trim(); // Take first sentence or part
+        }
+    }
+
+    // specific check for our new format
+    if (apt.description && apt.description.includes('Service Type:')) {
+        const match = apt.description.match(/Service Type:\s*(.*)/i);
+        if (match) {
+            service = match[1].split('.')[0].trim();
         }
     }
 
     return {
         id: apt.id,
-        patient,
-        treatment,
+        customer,
+        service,
         date: startDate.toLocaleDateString(),
         time: startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         duration: Math.round((endDate - startDate) / 60000) + ' min',

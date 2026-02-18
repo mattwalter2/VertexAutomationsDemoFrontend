@@ -11,9 +11,9 @@ export default function Appointments() {
 
     // Mock Providers for the sidebar
     const providers = [
-        { id: 1, name: 'Dr. Vora', role: 'Lead Dentist', color: 'blue' },
-        { id: 2, name: 'Dr. Smith', role: 'Orthodontist', color: 'purple' },
-        { id: 3, name: 'Dr. Sarah', role: 'Hygienist', color: 'green' }
+        { id: 1, name: 'Mike Ross', role: 'Master Plumber', color: 'blue' },
+        { id: 2, name: 'Sarah Jenks', role: 'Service Tech', color: 'purple' },
+        { id: 3, name: 'David Lee', role: 'Apprentice', color: 'green' }
     ]
 
     useEffect(() => {
@@ -95,7 +95,7 @@ export default function Appointments() {
                     <div className="space-y-1">
                         {dayApts.slice(0, 3).map((apt) => (
                             <div key={apt.id} className="text-xs p-1 rounded bg-sky-100 text-sky-800 truncate border border-sky-200">
-                                {apt.time} {apt.patient}
+                                {apt.time} {apt.customer}
                             </div>
                         ))}
                         {dayApts.length > 3 && <div className="text-xs text-center text-gray-500">+{dayApts.length - 3} more</div>}
@@ -141,7 +141,7 @@ export default function Appointments() {
                                 {apts.map(apt => (
                                     <div key={apt.id} className="p-2 text-xs bg-sky-50 text-sky-700 rounded border border-sky-100">
                                         <div className="font-bold">{apt.time}</div>
-                                        <div>{apt.patient}</div>
+                                        <div>{apt.customer}</div>
                                     </div>
                                 ))}
                             </div>
@@ -177,7 +177,7 @@ export default function Appointments() {
                                 <div className="flex-1 p-1 bg-gray-50/30">
                                     {hourApts.map(apt => (
                                         <div key={apt.id} className="bg-sky-100 border border-sky-200 text-sky-800 text-xs p-1 px-2 rounded mb-1">
-                                            {apt.time} - {apt.patient} ({apt.treatment})
+                                            {apt.time} - {apt.customer} ({apt.service})
                                         </div>
                                     ))}
                                 </div>
@@ -221,8 +221,8 @@ export default function Appointments() {
                                     dayApts.map(apt => (
                                         <div key={apt.id} className="bg-gray-50 p-2 rounded text-xs border border-gray-100 hover:border-blue-300 transition-colors cursor-pointer">
                                             <div className="font-semibold text-gray-700">{apt.time}</div>
-                                            <div className="text-gray-900">{apt.patient}</div>
-                                            <div className="text-gray-500 italic lowercase">{apt.treatment}</div>
+                                            <div className="text-gray-900">{apt.customer}</div>
+                                            <div className="text-gray-500 italic lowercase">{apt.service}</div>
                                         </div>
                                     ))
                                 ) : (

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Phone, Clock, CheckCircle2, XCircle, AlertCircle, Play, RefreshCw, Eye } from 'lucide-react'
+import { Phone, Clock, CheckCircle2, XCircle, AlertCircle, Play, RefreshCw, Eye, X, Loader2 } from 'lucide-react'
 import { fetchCalls, formatCallData, getCallStats } from '../services/vapiService'
 import CallDetailsModal from '../components/CallDetailsModal'
+
+const API_BASE_URL = 'https://vertexautomationsdemobackend.onrender.com';
 
 export default function Calls() {
     const [calls, setCalls] = useState([])
@@ -14,6 +16,9 @@ export default function Calls() {
         activeCalls: 0,
         successRate: 0
     })
+    const [isCalling, setIsCalling] = useState(false)
+    const [showPhoneModal, setShowPhoneModal] = useState(false)
+    const [targetPhone, setTargetPhone] = useState('')
 
     const loadCalls = async () => {
         setLoading(true)
@@ -38,6 +43,55 @@ export default function Calls() {
     useEffect(() => {
         loadCalls()
     }, [])
+
+    const handleTestCallClick = () => {
+        setShowPhoneModal(true);
+    }
+
+    const executeCall = async (e) => {
+        e.preventDefault();
+        if (!targetPhone) return;
+
+        setShowPhoneModal(false);
+
+        try {
+            setIsCalling(true);
+            const phoneNumber = targetPhone;
+
+            console.log("Requesting phone call to:", phoneNumber);
+
+            const response = await fetch(`${API_BASE_URL}/api/vapi/initiate-call`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    phoneNumber: phoneNumber,
+                    name: 'Matthew',
+                    procedure_interest: 'General Plumbing Service'
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || data.details || 'Failed to initiate call');
+            }
+
+            console.log("Call initiated successfully:", data);
+            alert(`Call initiated! Your phone (${phoneNumber}) should ring shortly.`);
+
+            setTimeout(() => {
+                setIsCalling(false);
+                loadCalls(); // Refresh list to show new call
+            }, 5000);
+
+        } catch (err) {
+            console.error("Failed to start phone call:", err);
+            setIsCalling(false);
+            alert(`Failed to start call: ${err.message}. Ensure backend is reachable.`);
+        }
+    }
 
     const getOutcomeColor = (outcome) => {
         if (outcome.includes('Completed') || outcome.includes('Booked')) {
@@ -78,9 +132,12 @@ export default function Calls() {
                         <RefreshCw size={20} className={loading ? 'animate-spin' : ''} />
                         Refresh
                     </button>
-                    <button className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 shadow-md hover:shadow-lg transition-all">
-                        <Phone size={20} />
-                        Make Test Call
+                    <button
+                        onClick={handleTestCallClick}
+                        disabled={isCalling}
+                        className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 shadow-md hover:shadow-lg transition-all disabled:opacity-70">
+                        {isCalling ? <Loader2 size={20} className="animate-spin" /> : <Phone size={20} />}
+                        {isCalling ? 'Calling...' : 'Make Test Call'}
                     </button>
                 </div>
             </div>
@@ -214,6 +271,63 @@ export default function Calls() {
                     call={selectedCall}
                     onClose={() => setSelectedCall(null)}
                 />
+            )}
+
+            {/* Phone Input Modal */}
+            {showPhoneModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+                        <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                            <h3 className="text-xl font-bold text-gray-900">Start Test Call</h3>
+                            <button
+                                onClick={() => setShowPhoneModal(false)}
+                                className="text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                                <X size={24} />
+                            </button>
+                        </div>
+
+                        <form onSubmit={executeCall} className="p-6">
+                            <div className="mb-6">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Phone Number
+                                </label>
+                                <div className="relative">
+                                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                                    <input
+                                        type="tel"
+                                        value={targetPhone}
+                                        onChange={(e) => setTargetPhone(e.target.value)}
+                                        placeholder="+1 (555) 000-0000"
+                                        className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none text-gray-900 placeholder:text-gray-400 font-medium"
+                                        autoFocus
+                                        required
+                                    />
+                                </div>
+                                <p className="text-xs text-gray-500 mt-2">
+                                    Format: E.164 preferred (e.g., +1555000000)
+                                </p>
+                            </div>
+
+                            <div className="flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPhoneModal(false)}
+                                    className="flex-1 px-4 py-3 text-gray-700 font-medium bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-1 px-4 py-3 text-white font-medium bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2"
+                                >
+                                    <Phone size={18} />
+                                    Call Now
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             )}
         </div>
     )

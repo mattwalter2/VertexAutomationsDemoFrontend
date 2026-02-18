@@ -275,10 +275,10 @@ export default function Dashboard({ onNavigate }) {
                                                 <span className="text-sm font-bold text-gray-900">{apt.time.split(' ')[0]}</span>
                                             </div>
                                             <div>
-                                                <h4 className="font-bold text-gray-900">{apt.patient}</h4>
+                                                <h4 className="font-bold text-gray-900">{apt.customer}</h4>
                                                 <p className="text-sm text-gray-500 flex items-center gap-1.5">
                                                     <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                                                    {apt.treatment}
+                                                    {apt.service}
                                                 </p>
                                             </div>
                                         </div>
