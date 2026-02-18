@@ -132,7 +132,7 @@ export default function Dashboard({ onNavigate }) {
                 body: JSON.stringify({
                     phoneNumber: phoneNumber,
                     name: 'Matthew',
-                    procedure_interest: 'Invisalign'
+                    procedure_interest: 'General Plumbing Service'
                 })
             });
 

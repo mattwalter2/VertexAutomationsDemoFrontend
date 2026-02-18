@@ -3,10 +3,10 @@ import { Home, Calendar, Users, Phone, BarChart3, Settings, MessageSquare, Calen
 export default function Sidebar({ currentPage, setCurrentPage }) {
     const menuItems = [
         { id: 'dashboard', label: 'Dashboard', icon: Home },
-        { id: 'leads', label: 'Leads', icon: UserPlus },
-        { id: 'followups', label: 'Follow Ups', icon: MessageSquare },
-        { id: 'appointments', label: 'Schedule', icon: Calendar },
-        { id: 'customers', label: 'Customers', icon: Users },
+        // { id: 'leads', label: 'Leads', icon: UserPlus },
+        // { id: 'followups', label: 'Follow Ups', icon: MessageSquare },
+        // { id: 'appointments', label: 'Schedule', icon: Calendar },
+        // { id: 'customers', label: 'Customers', icon: Users },
         { id: 'calls', label: 'Call Logs', icon: Phone },
     ]
 
